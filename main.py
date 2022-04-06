@@ -1,6 +1,6 @@
 
 import math
-from random import random
+import random
 from PIL import Image
 import numpy as np
 from Raio import Ray
@@ -23,10 +23,17 @@ imagem = Image.new(mode="RGB", size=(largura, altura), color=0)
 
 SceneObject=[]
 
+def random_indisc():
+    theta=random.uniform(0.0,2*math.pi)
+    return np.array([math.cos(theta),math.sin(theta),0.0])
+
 def getray(camera,s,t):
-    dire = camera.lowerleftcorner + s * camera.horizontal + t * camera.vertical - camera.lookfrom
-        
-    raio = Ray(camera.lookfrom, dire)
+    rd=camera.lensradius * random_indisc()
+    origin=camera.lookfrom + camera.u * rd[0] + camera.v * rd[1]
+
+    dire = camera.lowerleftcorner + s * camera.horizontal + t * camera.vertical - origin
+    raio = Ray(origin, dire)
+    
     return raio
 
 
@@ -82,7 +89,7 @@ def hit(raio:Ray,t_min,t_max,SceneObject,hitRecord:HitRecord):
 
 
 #criar esferas    
-materialfloor=lambetiano(np.array([0.8,0.8,0.0]))
+materialfloor=lambetiano(np.array([0.8,0.8,1.0]))
 materialcenter=lambetiano(np.array([0.7,0.5,0.5]))
 materialleft=metal(np.array([0.8,0.8,0.8]),0.9)
 materialright=metal(np.array([0.8,1.0,0.2]),0.4)
@@ -97,10 +104,10 @@ SceneObject.append(esfera4)
 
 #criar camera
 
-lookfrom=np.array([-2.0,2.0,1.0])
+lookfrom=np.array([3.0,3.0,2.0])
 lookat=np.array([0.0,0.0,-1.0])
 up=np.array([0.0,1.0,0.0])
-camera=Camera(90,aspecto,lookfrom,lookat,up)
+camera=Camera(20,aspecto,lookfrom,lookat,up,2.0,vetor1.norma(lookfrom-lookat))
 
 
 #lançar raios na cena
@@ -108,8 +115,8 @@ for j in range(1, largura):
     for i in range(1, altura):
         cor=np.array([0.0,0.0,0.0])
         for n in range (1,samples_perpixel):
-            u = (j-1 + random())/(largura-1)
-            v = 1.0 - (i-1 + random())/(altura-1)
+            u = (j-1 + random.random())/(largura-1)
+            v = 1.0 - (i-1 + random.random())/(altura-1)
             raio=getray(camera,u,v)
             cor =cor + raycolor(raio, SceneObject,depth=50)
             
