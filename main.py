@@ -8,7 +8,7 @@ from camera import Camera
 from vetor import Vetor
 from hittable1 import HitRecord
 import sys
-from material1 import metal, lambetiano,material
+from material1 import Dieletric, metal, lambetiano,material
 from Esferaray import Esfera
 
 
@@ -95,10 +95,11 @@ materialfloor=lambetiano(np.array([0.8,0.8,0.0]))
 materialcenter=lambetiano(np.array([0.1,0.2,0.5]))
 materialleft=metal(np.array([0.8,0.6,0.2]),0.0)
 materialright=metal(np.array([0.8,0.6,0.2]),0.0)
+glass=Dieletric(1.5)
 esfera1 = Esfera(np.array([0.0, 0.0, -1.0]),0.5,materialcenter)
 #esfera2 = Esfera(np.array([0.0, -100-0.5, -1.0]),100,materialfloor)
-esfera3 = Esfera(np.array([-1.0, 0.0, -1.0]),0.5,materialleft)
-esfera4 = Esfera(np.array([1.0, 0.0, -1.0]),0.5,materialright)
+esfera3 = Esfera(np.array([-1.0, 0.0, 0.0]),0.5,materialleft)
+esfera4 = Esfera(np.array([1.0, 0.0, -1.0]),0.5,glass)
 SceneObject.append(esfera1)
 #SceneObject.append(esfera2)
 SceneObject.append(esfera3)
@@ -110,7 +111,7 @@ lookfrom=np.array([3,3,2])
 lookat=np.array([0,0,-1])
 up=np.array([0,1,0])
 
-camera=Camera(20,aspecto,lookfrom,lookat,up,vetor1.norma(lookfrom-lookat),2.0)
+camera=Camera(90,aspecto,lookfrom,lookat,up,vetor1.norma(lookfrom-lookat),0.0)
 
 
 #lançar raios na cena
@@ -135,4 +136,4 @@ for j in range(1, largura):
         imagem.putpixel((j, i), (cor1, cor2, cor3))    
 
 
-imagem.save("imagem1.jpg")
+imagem.save("imagem2.jpg")
