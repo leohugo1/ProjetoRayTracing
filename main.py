@@ -16,7 +16,7 @@ vetor1 = Vetor()
 samples_perpixel=50
 # imagem
 aspecto = 16/9
-largura = 400
+largura = 200
 altura = int(math.trunc(largura/aspecto))
 
 imagem = Image.new(mode="RGB", size=(largura, altura), color=0)
@@ -24,17 +24,20 @@ imagem = Image.new(mode="RGB", size=(largura, altura), color=0)
 SceneObject=[]
 
 def random_indisc():
-    theta=random.uniform(0.0,2*math.pi)
-    return np.array([math.cos(theta),math.sin(theta),0.0])
-
-def getray(camera,s,t):
-    rd=camera.lensradius * random_indisc()
-    origin=camera.lookfrom + camera.u * rd[0] + camera.v * rd[1]
-
-    dire = camera.lowerleftcorner + s * camera.horizontal + t * camera.vertical - origin
-    raio = Ray(origin, dire)
     
-    return raio
+    return np.array([random.random(),random.random(),0.0])
+
+def getray(camera:Camera,s,t):
+    orizon=camera.horizontal
+    vert=camera.vertical
+    rd=camera.lensradius * random_indisc()
+    
+    origin=camera.lookfrom + (camera.u * rd[0]) + (camera.v * rd[1])
+   
+    dire = camera.lowerleftcorner + (s * orizon) + (t * vert) - origin 
+  
+    return Ray(origin, dire)
+    
 
 
 def reflect(dir,normal):
@@ -44,7 +47,7 @@ def reflect(dir,normal):
 def background(dir):
     t = 0.5 * (dir[1] + 1.0)
     # print(t)
-    return (1-t) * np.array([1.0, 1.0, 1.0]) + (t*np.array([0.5, 0.7, 1.0]))
+    return (1-t) * np.array([0.4, 0.4, 0.4]) + (t*np.array([0.3, 0.5, 0.7]))
 
 def clamp(value,vmin=0.0,vmax=1.0):
     return min(max(value,vmin),vmax)
@@ -52,13 +55,12 @@ def clamp(value,vmin=0.0,vmax=1.0):
 #dar cor ao objeto
 def raycolor(raio:Ray, sceneobject,depth):
     hitRecord=HitRecord()
-    ori=raio.origem
+    origin=raio.origem
     direc=raio.raio
-    
     if depth <=0:
         cor=np.array([0.0,0.0,0.0])
         return cor
-    if hit(Ray(ori,direc),0.0001,sys.float_info.max,sceneobject,hitRecord):
+    if hit(Ray(origin,direc),0.0001,sys.float_info.max,sceneobject,hitRecord):
         sholdscatter,attenuation,direction=hitRecord.material.scatter(raio,hitRecord)
         if sholdscatter:
             newray=Ray(hitRecord.p,direction)
@@ -66,7 +68,7 @@ def raycolor(raio:Ray, sceneobject,depth):
             return cor
         else:
             return np.array([0.0,0.0,0.0])
-    cor = background(direc)
+    cor = background(raio.raio)
     return cor
 
 #percorrer lista de objetos verificando se ocorre intersecção
@@ -89,25 +91,26 @@ def hit(raio:Ray,t_min,t_max,SceneObject,hitRecord:HitRecord):
 
 
 #criar esferas    
-materialfloor=lambetiano(np.array([0.8,0.8,1.0]))
-materialcenter=lambetiano(np.array([0.7,0.5,0.5]))
-materialleft=metal(np.array([0.8,0.8,0.8]),0.9)
-materialright=metal(np.array([0.8,1.0,0.2]),0.4)
+materialfloor=lambetiano(np.array([0.8,0.8,0.0]))
+materialcenter=lambetiano(np.array([0.1,0.2,0.5]))
+materialleft=metal(np.array([0.8,0.6,0.2]),0.0)
+materialright=metal(np.array([0.8,0.6,0.2]),0.0)
 esfera1 = Esfera(np.array([0.0, 0.0, -1.0]),0.5,materialcenter)
-esfera2 = Esfera(np.array([0.0, -100-0.5, -1.0]),100,materialfloor)
+#esfera2 = Esfera(np.array([0.0, -100-0.5, -1.0]),100,materialfloor)
 esfera3 = Esfera(np.array([-1.0, 0.0, -1.0]),0.5,materialleft)
 esfera4 = Esfera(np.array([1.0, 0.0, -1.0]),0.5,materialright)
 SceneObject.append(esfera1)
-SceneObject.append(esfera2)
+#SceneObject.append(esfera2)
 SceneObject.append(esfera3)
 SceneObject.append(esfera4)
 
 #criar camera
 
-lookfrom=np.array([3.0,3.0,2.0])
-lookat=np.array([0.0,0.0,-1.0])
-up=np.array([0.0,1.0,0.0])
-camera=Camera(20,aspecto,lookfrom,lookat,up,2.0,vetor1.norma(lookfrom-lookat))
+lookfrom=np.array([3,3,2])
+lookat=np.array([0,0,-1])
+up=np.array([0,1,0])
+
+camera=Camera(20,aspecto,lookfrom,lookat,up,vetor1.norma(lookfrom-lookat),2.0)
 
 
 #lançar raios na cena

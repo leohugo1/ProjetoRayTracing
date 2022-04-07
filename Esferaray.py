@@ -18,7 +18,6 @@ class Esfera(Vetor):
         oc=ray.origem-np.array(self.centro)
         b=Vetor.ProdutoEscalar(self,ray.raio,oc)
         c=Vetor.normaSquared(self,oc) - self.raio**2
-
         disc=b*b -  a *c
         if disc<0:
             return False

@@ -18,15 +18,11 @@ class Vetor:
         return vetor / self.norma(vetor)
 
     def random_unitvetor():
-        f=1/0.1
-        costheta=random.uniform(0.0,2*math.pi)
-        cosph=random.uniform(0.0,math.pi)
-
-        return np.array([math.cos(costheta)*math.sin(cosph),math.sin(costheta)*math.sin(cosph),math.cos(cosph)])
+        theta=random.uniform(0.0,2*math.pi)
+        fi=random.uniform(0.0,math.pi)
+        return np.array([random.random(),random.random(),random.random()])
     
     def random_insphere():
-
-        costheta=random.uniform(0.0,2*math.pi)
-        cosph=random.uniform(0.0,math.pi)
+        theta=random.uniform(0.0,2*math.pi)
         r=random.random()
-        return r * np.array([math.cos(costheta)*math.sin(cosph),math.sin(costheta)*math.sin(cosph),math.cos(cosph)])
+        return r* np.array([random.random(),random.random(),random.random()])
