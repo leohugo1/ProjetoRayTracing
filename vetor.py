@@ -18,11 +18,10 @@ class Vetor:
         return vetor / self.norma(vetor)
 
     def random_unitvetor():
-        theta=random.uniform(0.0,2*math.pi)
-        fi=random.uniform(0.0,math.pi)
+        
         return np.array([random.random(),random.random(),random.random()])
     
     def random_insphere():
-        theta=random.uniform(0.0,2*math.pi)
+        
         r=random.random()
         return r* np.array([random.random(),random.random(),random.random()])

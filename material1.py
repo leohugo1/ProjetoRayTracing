@@ -64,7 +64,6 @@ class Dieletric(material):
             refrectionratio= ir
 
         costheta= min(np.dot(-ray.raio,hitrecord.normal),1.0)
-        print(costheta)
         sintheta=math.sqrt(1.0 - int(costheta*costheta))
 
         cannotrefrect=refrectionratio * sintheta

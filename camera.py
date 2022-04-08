@@ -9,7 +9,7 @@ import numpy as np
 from vetor import Vetor
 
 class Camera(Vetor):
-    def __init__(self,vfov,aspecto,lookfrom,lookat,up,dist_focal,abertura):
+    def __init__(self,vfov,aspecto,lookfrom,lookat,up,dist_focal,abertura,time0=0,time1=0):
         theta=math.radians(vfov)
         self.abertura=abertura
         self.dist_focal=dist_focal
@@ -17,6 +17,8 @@ class Camera(Vetor):
         self.lookfrom=lookfrom
         self.lookat=lookat
         self.up=up
+        self.time0=time0
+        self.time1=time1
         self.h=math.tan(theta/2)
         self.viewportheigth = 2.0 * self.h
         self.viewportwidth =self.aspecto* self.viewportheigth 
@@ -33,6 +35,6 @@ class Camera(Vetor):
         
 
         self.lowerleftcorner = self.lookfrom - self.horizontal/2 - self.vertical/2 - self.dist_focal * self.w 
-        print("lowercorner",self.lowerleftcorner)
+        
         self.lensradius=self.abertura/2
     
