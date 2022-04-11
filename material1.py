@@ -74,3 +74,10 @@ class Dieletric(material):
 
 
         return True,np.array([1.0,1.0,1.0]),scatterdir
+
+
+class diffuse_light(material):
+    def __init__(self,color=np.array([0.0,0.0,0.0])):
+        self.color=color
+    def scatter(self, ray: Ray, hitrecord: HitRecord):
+        return False,self.color,0

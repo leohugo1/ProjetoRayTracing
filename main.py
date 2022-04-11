@@ -8,15 +8,15 @@ from camera import Camera
 from vetor import Vetor
 from hittable1 import HitRecord
 import sys
-from material1 import Dieletric, metal, lambetiano,material
+from material1 import Dieletric, diffuse_light, metal, lambetiano,material
 from Esferaray import Esfera, moving_sphere
 
 
 vetor1 = Vetor()
-samples_perpixel=100
+samples_perpixel=30
 # imagem
 aspecto = 16/9
-largura = 400
+largura = 200
 altura = int(math.trunc(largura/aspecto))
 
 imagem = Image.new(mode="RGB", size=(largura, altura), color=0)
@@ -48,7 +48,7 @@ def reflect(dir,normal):
 def background(dir):
     t = 0.5 * (dir[1] + 1.0)
     # print(t)
-    return (1-t) * np.array([0.4, 0.4, 0.4]) + (t*np.array([0.3, 0.5, 0.7]))
+    return (1-t) * np.array([0.0, 0.0, 0.0]) + (t*np.array([0.0, 0.0, 0.0]))
 
 def clamp(value,vmin=0.0,vmax=1.0):
     return min(max(value,vmin),vmax)
@@ -69,7 +69,7 @@ def raycolor(raio:Ray, sceneobject,depth):
             cor=np.array(attenuation) * raycolor(newray,sceneobject,depth-1)
             return cor
         else:
-            return np.array([0.0,0.0,0.0])
+            return attenuation
     cor = background(raio.raio)
     return cor
 
@@ -97,11 +97,12 @@ materialfloor=lambetiano(np.array([0.8,0.8,0.0]))
 materialcenter=lambetiano(np.array([0.1,0.2,0.5]))
 materialleft=metal(np.array([0.8,0.6,0.2]),0.0)
 materialright=metal(np.array([0.8,0.6,0.2]),0.0)
-glass=Dieletric(1.2)
-esfera0=moving_sphere(np.array([1.0,0.0,-1.0]),np.array([1.0,0.5,-1.0]),0.0,1.0,0.5,materialcenter)
+difuso=diffuse_light(np.array([1.0,1.0,1.0]))
+glass=Dieletric(1.33)
+esfera0=moving_sphere(np.array([1.0,0.0,-1.0]),np.array([1.3,0.0,-1.0]),0.0,1.0,0.5,materialcenter)
 esfera1 = Esfera(np.array([0.0, 0.0, -1.0]),0.5,materialcenter)
 esfera2 = Esfera(np.array([0.0, -100-0.5, -1.0]),100,materialfloor)
-esfera3 = Esfera(np.array([-1.0, 0.0, -1.0]),-0.5,glass)
+esfera3 = Esfera(np.array([0.0, 1.0, -1.0]),0.7,difuso)
 #esfera5=Esfera(np.array([1.0,0.0,-1.0]),-4.0,glass)
 #esfera4 = Esfera(np.array([1.0, 0.0, -1.0]),0.5,materialright)
 SceneObject.append(esfera1)
@@ -141,4 +142,4 @@ for j in range(1, largura):
         imagem.putpixel((j, i), (cor1, cor2, cor3))    
 
 
-imagem.save("imagem5.jpg")
+imagem.save("imagem7.jpg")
