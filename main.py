@@ -13,10 +13,10 @@ from Esferaray import Esfera, moving_sphere
 
 
 vetor1 = Vetor()
-samples_perpixel=30
+samples_perpixel=100
 # imagem
 aspecto = 16/9
-largura = 200
+largura = 400
 altura = int(math.trunc(largura/aspecto))
 
 imagem = Image.new(mode="RGB", size=(largura, altura), color=0)
@@ -58,13 +58,14 @@ def raycolor(raio:Ray, sceneobject,depth):
     hitRecord=HitRecord()
     origin=raio.origem
     direc=raio.raio
+    time=raio.time
     if depth <=0:
         cor=np.array([0.0,0.0,0.0])
         return cor
-    if hit(Ray(origin,direc,raio.times()),0.0001,sys.float_info.max,sceneobject,hitRecord):
+    if hit(Ray(origin,direc,time),0.0001,sys.float_info.max,sceneobject,hitRecord):
         sholdscatter,attenuation,direction=hitRecord.material.scatter(raio,hitRecord)
         if sholdscatter:
-            newray=Ray(hitRecord.p,direction,raio.times())
+            newray=Ray(hitRecord.p,direction,time)
             cor=np.array(attenuation) * raycolor(newray,sceneobject,depth-1)
             return cor
         else:
@@ -96,18 +97,18 @@ materialfloor=lambetiano(np.array([0.8,0.8,0.0]))
 materialcenter=lambetiano(np.array([0.1,0.2,0.5]))
 materialleft=metal(np.array([0.8,0.6,0.2]),0.0)
 materialright=metal(np.array([0.8,0.6,0.2]),0.0)
-glass=Dieletric(1.5)
-esfera0=moving_sphere(np.array([0.0,0.0,-1.0]),np.array([0.5,0.0,-1.0]),0.0,0.1,0.5,materialcenter)
+glass=Dieletric(1.2)
+esfera0=moving_sphere(np.array([1.0,0.0,-1.0]),np.array([1.0,0.5,-1.0]),0.0,1.0,0.5,materialcenter)
 esfera1 = Esfera(np.array([0.0, 0.0, -1.0]),0.5,materialcenter)
 esfera2 = Esfera(np.array([0.0, -100-0.5, -1.0]),100,materialfloor)
-esfera3 = Esfera(np.array([-1.0, 0.0, -1.0]),0.5,glass)
-esfera5=Esfera(np.array([-1.0,0.0,-1.0]),-4.0,glass)
-esfera4 = Esfera(np.array([1.0, 0.0, -1.0]),0.5,materialright)
+esfera3 = Esfera(np.array([-1.0, 0.0, -1.0]),-0.5,glass)
+#esfera5=Esfera(np.array([1.0,0.0,-1.0]),-4.0,glass)
+#esfera4 = Esfera(np.array([1.0, 0.0, -1.0]),0.5,materialright)
 SceneObject.append(esfera1)
 SceneObject.append(esfera2)
 SceneObject.append(esfera3)
-SceneObject.append(esfera4)
-SceneObject.append(esfera5)
+#SceneObject.append(esfera4)
+#SceneObject.append(esfera5)
 SceneObject.append(esfera0)
 #criar camera
 
@@ -115,7 +116,7 @@ lookfrom=np.array([0,0,0])
 lookat=np.array([0,0,-1])
 up=np.array([0,1,0])
 
-camera=Camera(90,aspecto,lookfrom,lookat,up,vetor1.norma(lookfrom-lookat),0.0,0.0,1.0)
+camera=Camera(90,aspecto,lookfrom,lookat,up,vetor1.norma(lookfrom-lookat),0.1,0.0,0.8)
 
 
 #lançar raios na cena
@@ -140,4 +141,4 @@ for j in range(1, largura):
         imagem.putpixel((j, i), (cor1, cor2, cor3))    
 
 
-imagem.save("imagem3.jpg")
+imagem.save("imagem5.jpg")

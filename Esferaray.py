@@ -55,9 +55,9 @@ class moving_sphere(Vetor):
         self.r=r
         self.material=material
     def center(self,time):
-        return self.cen0 + ((time-self.time0)/(self.time1-self.time0)) * (self.cen1 - self.cen0)
+        return np.array(self.cen0 + ((time-self.time0)/(self.time1-self.time0)) * (self.cen1 - self.cen0))
     def hit(self,ray:Ray,t_min,t_max,hitRecord:HitRecord):
-            oc=ray.origem - self.center(ray.times())
+            oc=ray.origem - self.center(ray.time)
             a=Vetor.normaSquared(self,ray.raio)
             b=Vetor.ProdutoEscalar(self,ray.raio,oc)
             c=Vetor.normaSquared(self,oc) - self.r**2
@@ -74,7 +74,7 @@ class moving_sphere(Vetor):
                         return False
             hitRecord.t=t
             hitRecord.p=ray.inteseccao(hitRecord.t)
-            outward_normal=(hitRecord.p - self.center(ray.times()))/self.r
+            outward_normal=(hitRecord.p - self.center(ray.time))/self.r
             if Vetor.ProdutoEscalar(self,ray.raio,np.array(outward_normal)) < 0:
                 hitRecord.frontface=True
             else:

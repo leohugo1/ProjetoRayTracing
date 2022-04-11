@@ -68,7 +68,7 @@ class Dieletric(material):
 
         cannotrefrect=refrectionratio * sintheta
         if cannotrefrect >1.0 or self.reflectance(costheta,refrectionratio)> random.random():
-            scatterdir=ray.raio - 2.0 * Vetor.ProdutoEscalar(self,ray.raio,hitrecord.normal) *hitrecord.normal + Vetor.random_insphere()
+            scatterdir=ray.raio - (2.0 * Vetor.ProdutoEscalar(self,ray.raio,hitrecord.normal)) *hitrecord.normal + Vetor.random_insphere()
         else:
             scatterdir=self.refratar(ray.raio,hitrecord.normal,refrectionratio)
 

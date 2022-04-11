@@ -9,5 +9,3 @@ class Ray(Vetor) :
 
     def inteseccao(self,t):
         return self.origem + t*self.raio
-    def times(self):
-        return self.time
