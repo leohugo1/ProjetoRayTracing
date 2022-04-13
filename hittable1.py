@@ -14,3 +14,5 @@ class HitRecord:
         self.normal=normal
         self.frontface=frontface
         self.material=material
+        #self.u
+        #self.v
